@@ -1,1 +1,4 @@
 # Bio_markers_STAT
+
+Dans le cadre de notre exposé, nous souhaiterions travailler à partir d'un article au sujet d'un panel de biomarkers pour diagnostiquer le cancer du pancreas (https://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.1003489), nous pensions étudier la base de données suivantes: https://www.kaggle.com/johnjdavisiv/urinary-biomarkers-for-pancreatic-cancer?select=Debernardi+et+al+2020+documentation.csv
+Pour ce faire, nous aurions une variable aléatoire Y valant 1 si le patient est porteur d'un cancer, et 0 sinon. Le vecteur x serait la quantité de certains biomarkers dans l'urine x = (niveau de REG1B, TFF1, REG1A).
