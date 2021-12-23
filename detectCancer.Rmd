@@ -35,5 +35,15 @@ We split the dataset in two parts. Taking 80% of patients, we build a training d
 
 ```{r}
 #Starting code
+#Creating the training and test sets
+sample_size <- floor(0.8 * nrow(DfPrediction))
+train_ind <- sample(nrow(DfPrediction), size = sample_size)
+DfPrediction.train <- as.data.frame(DfPrediction[train_ind,])
+DfPrediction.test <- as.data.frame(DfPrediction[-train_ind,])
+
+#Logistic regression
+DfPrediction.function = paste("diagnosis", "~", "REG1B, TFF1, REG1A")
+DfPrediction.glm = glm(as.formula(DfPrediction.function), data = DfPrediction.train , family = binomial)
+summary(DfPrediction.glm)
 ```
 
