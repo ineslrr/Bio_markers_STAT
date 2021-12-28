@@ -35,5 +35,17 @@ We split the dataset in two parts. Taking 80% of patients, we build a training d
 
 ```{r}
 #Starting code
+#Creating the training and test sets
+sample_size <- floor(0.8 * nrow(Dfprediction))
+train_ind <- sample(nrow(Dfprediction), size = sample_size)
+Dfprediction.train <- as.data.frame(Dfprediction[train_ind,])
+Dfprediction.test <- as.data.frame(Dfprediction[-train_ind,])
+
+#Logistic regression
+Dfprediction.function = paste("diagnosis", "~", "REG1B + TFF1 + REG1A")
+Dfprediction.glm = glm(as.formula(Dfprediction.function), data = Dfprediction.train , family = binomial)
+summary(Dfprediction.glm)
+
+#Cross validation
 ```
 
