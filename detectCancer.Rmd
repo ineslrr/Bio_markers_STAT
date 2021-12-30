@@ -17,9 +17,9 @@ When you save the notebook, an HTML file containing the code and output will be 
 
 The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
 ```{r}
-data <- read.csv('data.csv')
-data <- data.frame(data)
-print(data)
+data <- read.csv('data.csv', header=TRUE);
+data <- data.frame(data);
+print(data);
 ```
 We need to remove NA cells using na.omit(). 
 Then, we turn 1 and 2 values diagnosis into 0 and 3-value into 1.
@@ -27,6 +27,7 @@ Then, we turn 1 and 2 values diagnosis into 0 and 3-value into 1.
 ```{r}
 Dfprediction = na.omit(data)
 Dfprediction$diagnosis= 1*(Dfprediction$diagnosis == 3)
+
 print(Dfprediction)
 
 ```
@@ -49,3 +50,58 @@ summary(Dfprediction.glm)
 #Cross validation
 ```
 
+II) Likelihood ratio test
+This test aims to evaluate the dependency on parameters, ie to evaluate the correlation between the presence of the biomarkers and the presence of cancer.
+
+```{r}
+
+#lrtest= the generic function to carry out a likelihood ratio test. 
+
+## Definition of the null and alternative hypoteses
+
+pvalue_LRtest<- function(var){
+null_hyp <- glm(diagnosis ~ 1, data=Dfprediction);
+alternative_hyp <- glm(paste("diagnosis", "~", as.character(var)),data=Dfprediction);
+res_lrtest <- lrtest(null_hyp, alternative_hyp);
+res_lrtest$`Pr(>Chisq)`[2]; 
+}
+
+print(colnames(Dfprediction))
+names <- colnames(Dfprediction);
+names <- names[names != 'diagnosis'];
+pvalues <- sapply(names, pvalue_LRtest);
+# sapply: to apply a function to each element of a vector 
+
+names(pvalues)<- names_parameters;
+pvalues[order(pvalues, decreasing=FALSE)];
+```
+
+```{r}
+library(lmtest)
+pvalue_LRTest <- function(var){
+  globalnull <- glm(diagnosis  ~ 1, data=Dfprediction);
+  alternative <- glm(paste("diagnosis", "~", as.character(var)),data=Dfprediction);
+  res_lrtest <- lrtest(globalnull, alternative);
+  res_lrtest$`Pr(>Chisq)`[2];
+}
+
+
+names_features <- colnames(Dfprediction);
+names_features <- names_features[names_features != 'diagnosis'];
+pvalues <- sapply(names_features, pvalue_LRTest);
+names(pvalues) <- names_features;
+pvalues[order(pvalues, decreasing=FALSE)];
+
+```
+```{r}
+#Essai pour contrecarrer l'erreur (une des colonnes a une valeur constante, fait bugger, ne calculer que sur les colonnes dont la valeur est non constante)
+
+names_features <- colnames(Dfprediction);
+names_features <- names_features[names_features != 'diagnosis'];
+values_count <- sapply(lapply(names_features, unique), length)
+pvalues <- sapply(names_features >1 , pvalue_LRTest);
+names(pvalues) <- names_features;
+pvalues[order(pvalues, decreasing=FALSE)];
+
+
+```
