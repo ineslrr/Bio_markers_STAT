@@ -3,9 +3,9 @@ title: "R Notebook"
 output: html_notebook
 ---
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code.
 
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*.
 
 ```{r}
 plot(cars)
@@ -26,8 +26,8 @@ data <- read.csv('data.csv', header=TRUE);
 data <- data.frame(data);
 print(data);
 ```
-We need to remove NA cells using na.omit(). 
-Then, we turn 1 and 2 values diagnosis into 0 and 3-value into 1.
+
+We need to remove NA cells using na.omit(). Then, we turn 1 and 2 values diagnosis into 0 and 3-value into 1.
 
 ```{r}
 Dfprediction = na.omit(data)
@@ -55,8 +55,7 @@ summary(Dfprediction.glm)
 #Cross validation
 ```
 
-II) Likelihood ratio test
-This test aims to evaluate the dependency on parameters, ie to evaluate the correlation between the presence of the biomarkers and the presence of cancer.
+# II) Likelihood ratio test This test aims to evaluate the dependency on parameters, ie to evaluate the correlation between the presence of the biomarkers and the presence of cancer.
 
 ```{r}
 
@@ -98,6 +97,7 @@ names(pvalues) <- names_features;
 pvalues[order(pvalues, decreasing=FALSE)];
 
 ```
+
 ```{r}
 #Essai pour contrecarrer l'erreur (une des colonnes a une valeur constante, fait bugger, ne calculer que sur les colonnes dont la valeur est non constante)
 
@@ -110,3 +110,38 @@ pvalues[order(pvalues, decreasing=FALSE)];
 
 
 ```
+
+# III) Predict the result for our test dataset and assess the error of prediction
+
+```{r}
+print(Dfprediction.test)
+```
+```{r}
+# Predicting on test data based on training set
+Dfprediction.glm.predict <- predict(Dfprediction.glm,Dfprediction.test, type = "response")
+#predict is a generic function for predictions from the results of various model fitting functions
+summary(Dfprediction.glm.predict)
+```
+We can see in the cell above that on average patient have a probability 0.5477 to have PDAC cancer.
+
+
+
+```{r}
+print(Dfprediction.glm.predict)
+```
+```{r}
+tapply(Dfprediction.glm.predict, Dfprediction.test$diagnosis, mean)
+#compute the mean to get 0 and to get 1
+```
+A confusion matrix is a tabular summary of the number of correct and incorrect predictions made by a classifier. 
+```{r}
+# Confusion matrix for threshold of p
+p = 0.1
+dfPrediction.confusion = table(Dfprediction.test$diagnosis, Dfprediction.glm.predict > p)
+rownames(dfPrediction.confusion) <- c("Predict DETECTED","Predict NOT DETECTED");
+#colnames(dfPrediction.confusion) <- c("DETECTED","NOT DETECTED");
+print(dfPrediction.confusion);
+```
+
+
+
