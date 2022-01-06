@@ -51,8 +51,6 @@ Dfprediction.test <- as.data.frame(Dfprediction[-train_ind,])
 Dfprediction.function = paste("diagnosis", "~", "REG1B + TFF1 + REG1A")
 Dfprediction.glm = glm(as.formula(Dfprediction.function), data = Dfprediction.train , family = binomial)
 summary(Dfprediction.glm)
-
-#Cross validation
 ```
 
 # II) Likelihood ratio test This test aims to evaluate the dependency on parameters, ie to evaluate the correlation between the presence of the biomarkers and the presence of cancer.
