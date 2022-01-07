@@ -120,7 +120,7 @@ tapply(Dfprediction.glm.predict, Dfprediction.test$diagnosis, mean)
 A confusion matrix is a tabular summary of the number of correct and incorrect predictions made by a classifier. 
 ```{r}
 # Confusion matrix for threshold of p
-p = 0.5
+p = 0.42
 #table() returns a contingency table
 dfPrediction.confusion = table(Dfprediction.test$diagnosis, Dfprediction.glm.predict > p)
 
@@ -135,7 +135,7 @@ print(dfPrediction.confusion)
 ```
 ```{r}
 # False negative error rate (Type II error)
-dfPrediction.type2error = Dfprediction.confusion[1,1]/ (Dfprediction.confusion[1,1]+Dfprediction.confusion[2,2])
+dfPrediction.type2error = dfPrediction.confusion[1,1]/ (dfPrediction.confusion[1,1]+dfPrediction.confusion[2,2])
 print(paste("The proportion of errors of Type II is ",as.character(dfPrediction.type2error)));
 ```
 
