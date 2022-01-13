@@ -133,9 +133,13 @@ if (length(colnames(dfPrediction.confusion)) == 2){
 }
 print(dfPrediction.confusion)
 ```
-```{r}
+s
 # False negative error rate (Type II error)
-dfPrediction.type2error = dfPrediction.confusion[1,1]/ (dfPrediction.confusion[1,1]+dfPrediction.confusion[2,2])
+
+
+
+```{r}
+dfPrediction.type2error = dfPrediction.confusion[2,1]/ (dfPrediction.confusion[2,1]+dfPrediction.confusion[2,2])
 print(paste("The proportion of errors of Type II is ",as.character(dfPrediction.type2error)));
 ```
 
